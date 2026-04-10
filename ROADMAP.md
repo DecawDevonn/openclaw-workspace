@@ -10,11 +10,11 @@ From documentation to working system.
 
 | Task | Priority | Est. Time | Status |
 |------|----------|-----------|--------|
-| 1.1 Project structure | Critical | 2h | ⏳ |
-| 1.2 Job data model | Critical | 4h | ⏳ |
-| 1.3 In-memory queue | Critical | 4h | ⏳ |
-| 1.4 Basic agent worker | Critical | 6h | ⏳ |
-| 1.5 CLI interface | High | 4h | ⏳ |
+| 1.1 Project structure | Critical | 2h | ✅ |
+| 1.2 Job data model | Critical | 4h | ✅ |
+| 1.3 In-memory queue | Critical | 4h | ✅ |
+| 1.4 Basic agent worker | Critical | 6h | ✅ |
+| 1.5 CLI interface | High | 4h | ✅ |
 
 **Deliverable:** Can create and execute jobs via CLI
 
@@ -26,11 +26,11 @@ From documentation to working system.
 
 | Task | Priority | Est. Time | Status |
 |------|----------|-----------|--------|
-| 2.1 REST API server | Critical | 6h | ⏳ |
-| 2.2 Job creation endpoint | Critical | 4h | ⏳ |
-| 2.3 Quick capture endpoint | High | 4h | ⏳ |
-| 2.4 LLM intent parsing | High | 6h | ⏳ |
-| 2.5 Webhook receiver | Medium | 4h | ⏳ |
+| 2.1 REST API server | Critical | 6h | ✅ |
+| 2.2 Job creation endpoint | Critical | 4h | ✅ |
+| 2.3 Quick capture endpoint | High | 4h | ✅ |
+| 2.4 LLM intent parsing | High | 6h | ✅ |
+| 2.5 Webhook receiver | Medium | 4h | ✅ |
 
 **Deliverable:** Can submit jobs via API, webhooks, CLI
 
