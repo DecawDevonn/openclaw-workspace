@@ -42,11 +42,11 @@ From documentation to working system.
 
 | Task | Priority | Est. Time | Status |
 |------|----------|-----------|--------|
-| 3.1 Terminal agent | Critical | 6h | ⏳ |
-| 3.2 Web agent | Critical | 6h | ⏳ |
-| 3.3 Intelligence agent | High | 6h | ⏳ |
-| 3.4 Agent routing logic | High | 4h | ⏳ |
-| 3.5 Agent health monitoring | Medium | 4h | ⏳ |
+| 3.1 Terminal agent | Critical | 6h | ✅ |
+| 3.2 Web agent | Critical | 6h | ✅ |
+| 3.3 Intelligence agent | High | 6h | ✅ |
+| 3.4 Agent routing logic | High | 4h | ✅ |
+| 3.5 Agent health monitoring | Medium | 4h | ✅ |
 
 **Deliverable:** Agents execute different job types
 
