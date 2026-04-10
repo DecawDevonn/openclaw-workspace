@@ -1,0 +1,169 @@
+{
+  "version": "2.0",
+  "last_updated": "2026-04-10T15:45:00Z",
+  "total_captures": 9,
+  "captures": [
+    {
+      "id": "cap_9e9256c4",
+      "type": "note",
+      "content": "Feeling good about the new design direction",
+      "department": "personal",
+      "tags": [
+        "design"
+      ],
+      "priority": "low",
+      "source": "webchat",
+      "timestamp": 1775837133738,
+      "date": "2026-04-10",
+      "metadata": {}
+    },
+    {
+      "id": "cap_b6b17e4c",
+      "type": "idea",
+      "content": "John from Acme Corp called, wants proposal by Friday",
+      "department": "sales",
+      "tags": [
+        "call",
+        "proposal"
+      ],
+      "priority": "low",
+      "source": "whatsapp",
+      "timestamp": 1775837133732,
+      "date": "2026-04-10",
+      "metadata": {}
+    },
+    {
+      "id": "cap_f2ad77f6",
+      "type": "todo",
+      "content": "Idea: what if we add AI-powered email summaries to the product",
+      "department": "personal",
+      "tags": [
+        "email",
+        "product",
+        "ad"
+      ],
+      "priority": "medium",
+      "source": "telegram",
+      "timestamp": 1775837133726,
+      "date": "2026-04-10",
+      "metadata": {}
+    },
+    {
+      "id": "cap_c6680ef7",
+      "type": "todo",
+      "content": "Need to integrate Stripe API for payments, this is urgent",
+      "department": "engineering",
+      "tags": [
+        "api",
+        "stripe"
+      ],
+      "priority": "urgent",
+      "source": "mobile",
+      "timestamp": 1775837124000,
+      "date": "2026-04-10",
+      "metadata": {}
+    },
+    {
+      "id": "cap_09b8bb3a",
+      "type": "todo",
+      "content": "Need to integrate Stripe API for payments, this is urgent",
+      "department": "engineering",
+      "tags": [
+        "api",
+        "stripe"
+      ],
+      "priority": "urgent",
+      "source": "mobile",
+      "timestamp": 1775837116556,
+      "date": "2026-04-10",
+      "metadata": {}
+    },
+    {
+      "id": "cap_001",
+      "type": "todo",
+      "content": "Integrate Stripe API for payment processing",
+      "department": "engineering",
+      "tags": [
+        "api",
+        "stripe",
+        "payments",
+        "backend"
+      ],
+      "priority": "high",
+      "timestamp": 1712755200,
+      "date": "2026-04-10",
+      "source": "webchat",
+      "file": "capture/todos.md",
+      "status": "open"
+    },
+    {
+      "id": "cap_002",
+      "type": "todo",
+      "content": "Review Q2 content calendar and SEO strategy",
+      "department": "marketing",
+      "tags": [
+        "content",
+        "seo",
+        "calendar",
+        "q2"
+      ],
+      "priority": "medium",
+      "timestamp": 1712755300,
+      "date": "2026-04-10",
+      "source": "webchat",
+      "file": "capture/todos.md",
+      "status": "open"
+    },
+    {
+      "id": "cap_003",
+      "type": "idea",
+      "content": "Membership tier system for new product launch",
+      "department": "product",
+      "tags": [
+        "product",
+        "membership",
+        "pricing",
+        "feature"
+      ],
+      "priority": "medium",
+      "timestamp": 1712755400,
+      "date": "2026-04-10",
+      "source": "webchat",
+      "file": "capture/ideas.md",
+      "details": "Consider freemium model with basic/pro/enterprise tiers"
+    },
+    {
+      "id": "cap_004",
+      "type": "thought",
+      "content": "Today's standup was surprisingly efficient",
+      "department": "personal",
+      "tags": [
+        "meeting",
+        "efficiency",
+        "standup"
+      ],
+      "priority": "low",
+      "timestamp": 1712755500,
+      "date": "2026-04-10",
+      "source": "webchat",
+      "file": "capture/thoughts.md",
+      "reflection": "Shorter timebox + async updates beforehand worked well"
+    }
+  ],
+  "stats": {
+    "by_type": {
+      "todo": 2,
+      "idea": 1,
+      "note": 0,
+      "thought": 1
+    },
+    "by_department": {
+      "engineering": 1,
+      "marketing": 1,
+      "product": 1,
+      "personal": 1,
+      "sales": 0,
+      "support": 0
+    }
+  }
+}

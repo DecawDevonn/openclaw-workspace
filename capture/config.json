@@ -1,0 +1,19 @@
+{
+  "version": "2.0",
+  "departments": ["engineering", "marketing", "sales", "support", "personal"],
+  "auto_tag": true,
+  "priority_detection": true,
+  "follow_up_suggestions": true,
+  "default_department": "personal",
+  "routing_rules": {
+    "engineering": ["api", "code", "build", "deploy", "bug", "fix", "github", "database", "server", "backend", "frontend", "dev"],
+    "marketing": ["ad", "seo", "content", "campaign", "social", "blog", "brand", "marketing"],
+    "sales": ["lead", "deal", "proposal", "client", "contract", "revenue", "sales", "pitch"],
+    "support": ["help", "issue", "ticket", "customer", "problem", "question", "support"]
+  },
+  "priority_signals": {
+    "urgent": ["asap", "urgent", "today", "now", "blocking", "critical", "deadline"],
+    "high": ["important", "needed", "should", "this week", "priority"],
+    "low": ["someday", "maybe", "whenever", "eventually", "later"]
+  }
+}
