@@ -58,11 +58,11 @@ From documentation to working system.
 
 | Task | Priority | Est. Time | Status |
 |------|----------|-----------|--------|
-| 4.1 Database schema | Critical | 4h | ⏳ |
-| 4.2 Job persistence | Critical | 6h | ⏳ |
-| 4.3 Queue persistence | Critical | 4h | ⏳ |
-| 4.4 Log aggregation | High | 4h | ⏳ |
-| 4.5 Migration system | Medium | 4h | ⏳ |
+| 4.1 Database schema | Critical | 4h | ✅ |
+| 4.2 Job persistence | Critical | 6h | ✅ |
+| 4.3 Queue persistence | Critical | 4h | ✅ |
+| 4.4 Log aggregation | High | 4h | ✅ |
+| 4.5 Migration system | Medium | 4h | ✅ |
 
 **Deliverable:** System survives restart without data loss
 
