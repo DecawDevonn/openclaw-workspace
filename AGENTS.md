@@ -1,212 +1,412 @@
-# AGENTS.md - Your Workspace
+# AGENTS.md — WORKER DEFINITIONS & BEHAVIORS
 
-This folder is home. Treat it that way.
+Who executes jobs and how they decide what to do.
 
-## First Run
+This is the **workforce layer** that brings the system to life.
 
-If `BOOTSTRAP.md` exists, that's your birth certificate. Follow it, figure out who you are, then delete it. You won't need it again.
+---
 
-## Session Startup
+## 🎯 Purpose
 
-Before doing anything else:
+Agents are the execution engines of Devonn.ai. They:
+- Pull jobs from queues
+- Execute defined actions
+- Report results and logs
+- Handle failures and retries
+- Learn from outcomes
 
-1. Read `SOUL.md` — this is who you are
-2. Read `USER.md` — this is who you're helping
-3. Read `memory/YYYY-MM-DD.md` (today + yesterday) for recent context
-4. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
+---
 
-Don't ask permission. Just do it.
+## 🤖 Agent Architecture
 
-## Memory
+```
+┌─────────────────────────────────────────────────────────┐
+│                    QUEUE LAYER                          │
+│              (Jobs waiting to execute)                  │
+└────────────────────┬────────────────────────────────────┘
+                     │
+        ┌────────────┼────────────┐
+        ▼            ▼            ▼
+   ┌─────────┐  ┌─────────┐  ┌─────────┐
+   │  WEB    │  │ TERMINAL│  │ SYSTEM  │
+   │  AGENT  │  │  AGENT  │  │  AGENT  │
+   └────┬────┘  └────┬────┘  └────┬────┘
+        │            │            │
+        └────────────┼────────────┘
+                     ▼
+┌─────────────────────────────────────────────────────────┐
+│                   EXECUTION ENGINE                      │
+│         (Tools, APIs, Scripts, LLM Calls)               │
+└─────────────────────────────────────────────────────────┘
+```
 
-You wake up fresh each session. These files are your continuity:
+---
 
-- **Daily notes:** `memory/YYYY-MM-DD.md` (create `memory/` if needed) — raw logs of what happened
-- **Long-term:** `MEMORY.md` — your curated memories, like a human's long-term memory
+## 🧩 Agent Types
 
-Capture what matters. Decisions, context, things to remember. Skip the secrets unless asked to keep them.
+### 1. WEB AGENT
+**Purpose:** Handle web-based interactions and research
 
-### 🧠 MEMORY.md - Your Long-Term Memory
+**Capabilities:**
+- Web scraping and data extraction
+- API integrations
+- Browser automation
+- Content generation
+- Social media operations
 
-- **ONLY load in main session** (direct chats with your human)
-- **DO NOT load in shared contexts** (Discord, group chats, sessions with other people)
-- This is for **security** — contains personal context that shouldn't leak to strangers
-- You can **read, edit, and update** MEMORY.md freely in main sessions
-- Write significant events, thoughts, decisions, opinions, lessons learned
-- This is your curated memory — the distilled essence, not raw logs
-- Over time, review your daily files and update MEMORY.md with what's worth keeping
+**Tools:**
+- `browser` — Web automation
+- `web_search` — Information retrieval
+- `web_fetch` — Content extraction
+- `api_gateway` — Third-party integrations
 
-### 📝 Write It Down - No "Mental Notes"!
+**Queue:** standard
+**Concurrency:** 5
+**Timeout:** 30s
 
-- **Memory is limited** — if you want to remember something, WRITE IT TO A FILE
-- "Mental notes" don't survive session restarts. Files do.
-- When someone says "remember this" → update `memory/YYYY-MM-DD.md` or relevant file
-- When you learn a lesson → update AGENTS.md, TOOLS.md, or the relevant skill
-- When you make a mistake → document it so future-you doesn't repeat it
-- **Text > Brain** 📝
+**Example Jobs:**
+- Research competitor pricing
+- Post to social media
+- Scrape documentation
+- Monitor website changes
 
-## Red Lines
+---
 
-- Don't exfiltrate private data. Ever.
-- Don't run destructive commands without asking.
-- `trash` > `rm` (recoverable beats gone forever)
-- When in doubt, ask.
+### 2. TERMINAL AGENT
+**Purpose:** Execute system commands and file operations
 
-## External vs Internal
+**Capabilities:**
+- Shell command execution
+- File system operations
+- Git operations
+- Build and deployment
+- System maintenance
 
-**Safe to do freely:**
+**Tools:**
+- `exec` — Shell commands
+- `read/write/edit` — File operations
+- `process` — Process management
+- `gateway` — Service control
 
-- Read files, explore, organize, learn
-- Search the web, check calendars
-- Work within this workspace
+**Queue:** standard
+**Concurrency:** 3
+**Timeout:** 300s
 
-**Ask first:**
+**Example Jobs:**
+- Deploy application
+- Run tests
+- Update dependencies
+- Clean up logs
+- Backup data
 
-- Sending emails, tweets, public posts
-- Anything that leaves the machine
-- Anything you're uncertain about
+---
 
-## Group Chats
+### 3. SYSTEM AGENT
+**Purpose:** Internal system maintenance and optimization
 
-You have access to your human's stuff. That doesn't mean you _share_ their stuff. In groups, you're a participant — not their voice, not their proxy. Think before you speak.
+**Capabilities:**
+- Health monitoring
+- Resource management
+- Queue optimization
+- Log aggregation
+- Metric collection
 
-### 💬 Know When to Speak!
+**Tools:**
+- `cron` — Scheduled tasks
+- `sessions_list/status` — Session management
+- `memory_search` — Knowledge retrieval
+- `gateway` — System control
 
-In group chats where you receive every message, be **smart about when to contribute**:
+**Queue:** background
+**Concurrency:** 2
+**Timeout:** 60s
 
-**Respond when:**
+**Example Jobs:**
+- Generate daily reports
+- Clean old sessions
+- Optimize queue depths
+- Update system metrics
+- Check disk space
 
-- Directly mentioned or asked a question
-- You can add genuine value (info, insight, help)
-- Something witty/funny fits naturally
-- Correcting important misinformation
-- Summarizing when asked
+---
 
-**Stay silent (HEARTBEAT_OK) when:**
+### 4. INTELLIGENCE AGENT
+**Purpose:** LLM-powered analysis and decision making
 
-- It's just casual banter between humans
-- Someone already answered the question
-- Your response would just be "yeah" or "nice"
-- The conversation is flowing fine without you
-- Adding a message would interrupt the vibe
+**Capabilities:**
+- Natural language understanding
+- Content generation
+- Pattern recognition
+- Summarization
+- Classification
 
-**The human rule:** Humans in group chats don't respond to every single message. Neither should you. Quality > quantity. If you wouldn't send it in a real group chat with friends, don't send it.
+**Tools:**
+- `sessions_spawn` — Sub-agent creation
+- `memory_search/get` — Knowledge access
+- `web_search/fetch` — Research
+- `tts` — Voice generation
 
-**Avoid the triple-tap:** Don't respond multiple times to the same message with different reactions. One thoughtful response beats three fragments.
+**Queue:** standard
+**Concurrency:** 10
+**Timeout:** 120s
 
-Participate, don't dominate.
+**Example Jobs:**
+- Summarize meeting notes
+- Classify incoming tasks
+- Generate documentation
+- Analyze sentiment
+- Create content
 
-### 😊 React Like a Human!
+---
 
-On platforms that support reactions (Discord, Slack), use emoji reactions naturally:
+### 5. ORCHESTRATOR AGENT
+**Purpose:** Coordinate multi-step workflows
 
-**React when:**
+**Capabilities:**
+- Job decomposition
+- Parallel execution
+- Dependency management
+- Result aggregation
+- Error handling
 
-- You appreciate something but don't need to reply (👍, ❤️, 🙌)
-- Something made you laugh (😂, 💀)
-- You find it interesting or thought-provoking (🤔, 💡)
-- You want to acknowledge without interrupting the flow
-- It's a simple yes/no or approval situation (✅, 👀)
+**Tools:**
+- `sessions_spawn` — Create sub-agents
+- `subagents` — Manage agent pool
+- `cron` — Schedule follow-ups
+- `message` — Notifications
 
-**Why it matters:**
-Reactions are lightweight social signals. Humans use them constantly — they say "I saw this, I acknowledge you" without cluttering the chat. You should too.
+**Queue:** critical
+**Concurrency:** 3
+**Timeout:** 600s
 
-**Don't overdo it:** One reaction per message max. Pick the one that fits best.
+**Example Jobs:**
+- Deploy full stack
+- Run integration tests
+- Process large datasets
+- Coordinate team workflows
 
-## Tools
+---
 
-Skills provide your tools. When you need one, check its `SKILL.md`. Keep local notes (camera names, SSH details, voice preferences) in `TOOLS.md`.
+## ⚙️ Agent Configuration
 
-**🎭 Voice Storytelling:** If you have `sag` (ElevenLabs TTS), use voice for stories, movie summaries, and "storytime" moments! Way more engaging than walls of text. Surprise people with funny voices.
-
-**📝 Platform Formatting:**
-
-- **Discord/WhatsApp:** No markdown tables! Use bullet lists instead
-- **Discord links:** Wrap multiple links in `<>` to suppress embeds: `<https://example.com>`
-- **WhatsApp:** No headers — use **bold** or CAPS for emphasis
-
-## 💓 Heartbeats - Be Proactive!
-
-When you receive a heartbeat poll (message matches the configured heartbeat prompt), don't just reply `HEARTBEAT_OK` every time. Use heartbeats productively!
-
-Default heartbeat prompt:
-`Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`
-
-You are free to edit `HEARTBEAT.md` with a short checklist or reminders. Keep it small to limit token burn.
-
-### Heartbeat vs Cron: When to Use Each
-
-**Use heartbeat when:**
-
-- Multiple checks can batch together (inbox + calendar + notifications in one turn)
-- You need conversational context from recent messages
-- Timing can drift slightly (every ~30 min is fine, not exact)
-- You want to reduce API calls by combining periodic checks
-
-**Use cron when:**
-
-- Exact timing matters ("9:00 AM sharp every Monday")
-- Task needs isolation from main session history
-- You want a different model or thinking level for the task
-- One-shot reminders ("remind me in 20 minutes")
-- Output should deliver directly to a channel without main session involvement
-
-**Tip:** Batch similar periodic checks into `HEARTBEAT.md` instead of creating multiple cron jobs. Use cron for precise schedules and standalone tasks.
-
-**Things to check (rotate through these, 2-4 times per day):**
-
-- **Emails** - Any urgent unread messages?
-- **Calendar** - Upcoming events in next 24-48h?
-- **Mentions** - Twitter/social notifications?
-- **Weather** - Relevant if your human might go out?
-
-**Track your checks** in `memory/heartbeat-state.json`:
+### Base Agent Structure
 
 ```json
 {
-  "lastChecks": {
-    "email": 1703275200,
-    "calendar": 1703260800,
-    "weather": null
+  "id": "uuid",
+  "type": "web | terminal | system | intelligence | orchestrator",
+  "name": "descriptive-name",
+  "status": "idle | running | paused | error",
+  
+  "capabilities": ["tool1", "tool2"],
+  "queue": "queue-name",
+  
+  "config": {
+    "concurrency": 5,
+    "timeout": 30000,
+    "retry": 3,
+    "backoff": "exponential"
+  },
+  
+  "metrics": {
+    "jobs_completed": 0,
+    "jobs_failed": 0,
+    "avg_processing_time": 0,
+    "last_active": "timestamp"
+  },
+  
+  "health": {
+    "status": "healthy",
+    "last_check": "timestamp",
+    "errors": []
   }
 }
 ```
 
-**When to reach out:**
+---
 
-- Important email arrived
-- Calendar event coming up (&lt;2h)
-- Something interesting you found
-- It's been >8h since you said anything
+## 🔄 Agent Lifecycle
 
-**When to stay quiet (HEARTBEAT_OK):**
+```
+┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐
+│  INIT   │ → │  IDLE   │ → │ RUNNING │ → │COMPLETE │
+└─────────┘    └─────────┘    └────┬────┘    └─────────┘
+     │              ↑              │
+     │              └──────────────┘
+     │                   (next job)
+     │
+     └──────────────────────────────────→ [ERROR]
+                                               │
+                                               ▼
+                                         ┌─────────┐
+                                         │  RETRY  │
+                                         └────┬────┘
+                                              │
+                    ┌─────────────────────────┘
+                    ▼
+              ┌─────────┐
+              │  DLQ    │ (max retries exceeded)
+              └─────────┘
+```
 
-- Late night (23:00-08:00) unless urgent
-- Human is clearly busy
-- Nothing new since last check
-- You just checked &lt;30 minutes ago
+---
 
-**Proactive work you can do without asking:**
+## 🛡️ Safety & Controls
 
-- Read and organize memory files
-- Check on projects (git status, etc.)
-- Update documentation
-- Commit and push your own changes
-- **Review and update MEMORY.md** (see below)
+### Execution Limits
 
-### 🔄 Memory Maintenance (During Heartbeats)
+| Limit | Value | Purpose |
+|-------|-------|---------|
+| Max execution time | 600s | Prevent runaway jobs |
+| Max memory | 512MB | Resource protection |
+| Max file size | 100MB | Storage protection |
+| Max API calls | 100/min | Rate limiting |
+| Max retries | 3 | Failure handling |
 
-Periodically (every few days), use a heartbeat to:
+### Sandboxing
 
-1. Read through recent `memory/YYYY-MM-DD.md` files
-2. Identify significant events, lessons, or insights worth keeping long-term
-3. Update `MEMORY.md` with distilled learnings
-4. Remove outdated info from MEMORY.md that's no longer relevant
+- File system: Restricted to workspace
+- Network: Allowed for approved domains
+- Commands: Pre-approved list only
+- Environment: Isolated from host
 
-Think of it like a human reviewing their journal and updating their mental model. Daily files are raw notes; MEMORY.md is curated wisdom.
+### Approval Gates
 
-The goal: Be helpful without being annoying. Check in a few times a day, do useful background work, but respect quiet time.
+Certain actions require explicit approval:
+- External API writes
+- Production deployments
+- Destructive operations
+- High-cost operations
 
-## Make It Yours
+---
 
-This is a starting point. Add your own conventions, style, and rules as you figure out what works.
+## 📊 Agent Metrics
+
+### Per-Agent Tracking
+
+```javascript
+{
+  "agent_id": "web-agent-1",
+  "metrics": {
+    "jobs_completed": 1523,
+    "jobs_failed": 23,
+    "success_rate": 0.985,
+    "avg_processing_time": 12.4,
+    "total_processing_time": 18923,
+    "queue_depth": 5,
+    "last_job": "2026-04-10T17:30:00Z",
+    "errors_last_hour": 0
+  }
+}
+```
+
+### Health Indicators
+
+| Status | Condition |
+|--------|-----------|
+| 🟢 Healthy | < 5% error rate, processing normally |
+| 🟡 Warning | 5-10% error rate, or high latency |
+| 🔴 Critical | > 10% error rate, or not processing |
+
+---
+
+## 🧠 Agent Intelligence
+
+### Decision Making
+
+Agents use this priority order:
+
+1. **Explicit Instructions** — Job payload rules
+2. **User Preferences** — From USER.md
+3. **System Defaults** — From IDENTITY.md
+4. **Learned Patterns** — From REFLECTION.md
+5. **Safe Fallbacks** — Conservative defaults
+
+### Context Awareness
+
+Agents always have access to:
+- Current job details
+- User profile (USER.md)
+- System identity (IDENTITY.md)
+- Relevant memories
+- Tool documentation
+
+### Self-Improvement
+
+Agents can:
+- Log execution patterns
+- Suggest optimizations
+- Update their own configs
+- Learn from failures
+
+---
+
+## 🔧 Agent Implementation
+
+### Example: Terminal Agent
+
+```typescript
+class TerminalAgent {
+  async execute(job: Job): Promise<Result> {
+    // 1. Validate job
+    if (!this.canHandle(job)) {
+      return { status: 'rejected', reason: 'unsupported' };
+    }
+    
+    // 2. Check safety
+    if (this.requiresApproval(job)) {
+      await this.requestApproval(job);
+    }
+    
+    // 3. Execute
+    const startTime = Date.now();
+    try {
+      const result = await this.runCommand(job.payload);
+      
+      // 4. Log success
+      this.metrics.recordSuccess(Date.now() - startTime);
+      
+      return { status: 'completed', result };
+    } catch (error) {
+      // 5. Handle failure
+      this.metrics.recordFailure(error);
+      
+      if (job.retries < job.maxRetries) {
+        return { status: 'retry', error };
+      }
+      
+      return { status: 'failed', error };
+    }
+  }
+}
+```
+
+---
+
+## 🚫 Anti-Patterns
+
+- **Monolithic agents** — One agent doing everything
+- **No timeouts** — Agents running forever
+- **Silent failures** — Errors not logged or reported
+- **No isolation** — Agents interfering with each other
+- **Hard-coded logic** — No configuration or learning
+
+---
+
+## 🔗 Related Documents
+
+- `JOB.md` — What agents execute
+- `QUEUE.md` — Where agents get work
+- `USER.md` — Who agents serve
+- `IDENTITY.md` — How agents should behave
+- `REFLECTION.md` — How agents improve
+
+---
+
+## 📌 Core Principle
+
+> Agents are not tools. They are autonomous workers with context, judgment, and the ability to improve.
+
+---
+
+*Last updated: 2026-04-10*
