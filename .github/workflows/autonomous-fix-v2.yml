@@ -1,0 +1,290 @@
+name: Autonomous Fix Engine - Phase 2
+
+on:
+  issues:
+    types: [opened, edited, labeled]
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 'Issue number to analyze'
+        required: true
+        type: string
+      dry_run:
+        description: 'Dry run mode (analyze only, no PR)'
+        required: false
+        type: boolean
+        default: false
+
+env:
+  HISTORY_DIR: .autonomous-fix-history
+
+jobs:
+  # =============================================================================
+  # PHASE 1: ANALYZE ISSUE AND GENERATE PROPOSAL
+  # =============================================================================
+  analyze:
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'workflow_dispatch' || 
+      contains(github.event.issue.labels.*.name, 'auto-fix') || 
+      contains(github.event.issue.body, '@fix-engine') ||
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@fix-engine'))
+    outputs:
+      has_proposal: ${{ steps.proposal.outputs.has_proposal }}
+      confidence_score: ${{ steps.proposal.outputs.confidence_score }}
+      proposal_file: ${{ steps.proposal.outputs.proposal_file }}
+      issue_number: ${{ steps.issue.outputs.number }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f scripts/ai/requirements.txt ]; then
+            pip install -r scripts/ai/requirements.txt
+          fi
+
+      - name: Get issue data
+        id: issue
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "number=${{ github.event.inputs.issue_number }}" >> $GITHUB_OUTPUT
+            echo "body=See issue #${{ github.event.inputs.issue_number }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" = "issue_comment" ]; then
+            echo "number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
+            echo "body=${{ github.event.issue.body }}" >> $GITHUB_OUTPUT
+          else
+            echo "number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
+            echo "body=${{ github.event.issue.body }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run AI Analysis
+        id: proposal
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ISSUE_NUMBER: ${{ steps.issue.outputs.number }}
+          ISSUE_BODY: ${{ steps.issue.outputs.body }}
+        run: |
+          mkdir -p $HISTORY_DIR
+          
+          python scripts/ai/propose_fixes.py \
+            --issue-number "$ISSUE_NUMBER" \
+            --issue-body "$ISSUE_BODY" \
+            --output-json "$HISTORY_DIR/proposal-${{ steps.issue.outputs.number }}.json" \
+            --dry-run ${{ github.event.inputs.dry_run || 'false' }}
+          
+          echo "proposal_file=$HISTORY_DIR/proposal-${{ steps.issue.outputs.number }}.json" >> $GITHUB_OUTPUT
+
+      - name: Upload proposal artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: proposal-${{ steps.issue.outputs.number }}
+          path: ${{ env.HISTORY_DIR }}/proposal-${{ steps.issue.outputs.number }}.json
+          retention-days: 30
+
+      - name: Comment on issue with proposal
+        if: steps.proposal.outputs.has_proposal == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const proposal = JSON.parse(fs.readFileSync('${{ env.HISTORY_DIR }}/proposal-${{ steps.issue.outputs.number }}.json', 'utf8'));
+            
+            github.rest.issues.createComment({
+              issue_number: ${{ steps.issue.outputs.number }},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 🤖 Autonomous Fix Proposal\n\n${proposal.proposal}\n\n---\n**Confidence:** ${(proposal.confidence_score * 100).toFixed(0)}% | **Files analyzed:** ${proposal.files_analyzed?.length || 0}\n*Reply with \`/apply-fix\` to generate a patch and create a draft PR.*`
+            });
+
+  # =============================================================================
+  # PHASE 2: GENERATE PATCH (triggered by /apply-fix comment or high confidence)
+  # =============================================================================
+  generate-patch:
+    runs-on: ubuntu-latest
+    needs: analyze
+    if: |
+      needs.analyze.outputs.has_proposal == 'true' &&
+      (github.event.comment.body == '/apply-fix' || 
+       needs.analyze.outputs.confidence_score >= 0.7)
+    outputs:
+      can_create_pr: ${{ steps.patch.outputs.can_create_pr }}
+      patch_file: ${{ steps.patch.outputs.patch_file }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openai
+
+      - name: Download proposal artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: proposal-${{ needs.analyze.outputs.issue_number }}
+          path: ${{ env.HISTORY_DIR }}
+
+      - name: Generate patch
+        id: patch
+        run: |
+          python scripts/ai/patch_generator.py \
+            --proposal-file "${{ env.HISTORY_DIR }}/proposal-${{ needs.analyze.outputs.issue_number }}.json" \
+            --output-json "${{ env.HISTORY_DIR }}/patch-${{ needs.analyze.outputs.issue_number }}.json" \
+            --output-diff "${{ env.HISTORY_DIR }}/patch-${{ needs.analyze.outputs.issue_number }}.diff"
+          
+          echo "patch_file=$HISTORY_DIR/patch-${{ needs.analyze.outputs.issue_number }}.json" >> $GITHUB_OUTPUT
+
+      - name: Upload patch artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: patch-${{ needs.analyze.outputs.issue_number }}
+          path: |
+            ${{ env.HISTORY_DIR }}/patch-${{ needs.analyze.outputs.issue_number }}.json
+            ${{ env.HISTORY_DIR }}/patch-${{ needs.analyze.outputs.issue_number }}.diff
+          retention-days: 30
+
+  # =============================================================================
+  # PHASE 3: CREATE DRAFT PR (if patch is valid and confidence is high)
+  # =============================================================================
+  create-pr:
+    runs-on: ubuntu-latest
+    needs: [analyze, generate-patch]
+    if: |
+      needs.generate-patch.outputs.can_create_pr == 'true' &&
+      github.event.inputs.dry_run != 'true'
+    outputs:
+      pr_number: ${{ steps.pr.outputs.pr_number }}
+      pr_url: ${{ steps.pr.outputs.pr_url }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: proposal-${{ needs.analyze.outputs.issue_number }}
+          path: ${{ env.HISTORY_DIR }}
+      
+      - uses: actions/download-artifact@v4
+        with:
+          name: patch-${{ needs.analyze.outputs.issue_number }}
+          path: ${{ env.HISTORY_DIR }}
+
+      - name: Apply patches
+        run: |
+          python scripts/ai/patch_generator.py \
+            --proposal-file "${{ env.HISTORY_DIR }}/proposal-${{ needs.analyze.outputs.issue_number }}.json" \
+            --apply
+
+      - name: Create draft PR
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/ai/create_draft_pr.py \
+            --proposal-file "${{ env.HISTORY_DIR }}/proposal-${{ needs.analyze.outputs.issue_number }}.json" \
+            --patch-file "${{ env.HISTORY_DIR }}/patch-${{ needs.analyze.outputs.issue_number }}.json"
+
+  # =============================================================================
+  # PHASE 4: RECORD OUTCOME (always run to track history)
+  # =============================================================================
+  record:
+    runs-on: ubuntu-latest
+    needs: [analyze, generate-patch, create-pr]
+    if: always()
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Download artifacts
+        if: needs.analyze.outputs.has_proposal == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          path: ${{ env.HISTORY_DIR }}
+
+      - name: Record proposal
+        if: needs.analyze.outputs.has_proposal == 'true'
+        run: |
+          python scripts/ai/acceptance_tracker.py record \
+            --proposal-file "${{ env.HISTORY_DIR }}/proposal-${{ needs.analyze.outputs.issue_number }}/proposal-${{ needs.analyze.outputs.issue_number }}.json" \
+            --patch-file "${{ env.HISTORY_DIR }}/patch-${{ needs.analyze.outputs.issue_number }}/patch-${{ needs.analyze.outputs.issue_number }}.json" \
+            --issue-number "${{ needs.analyze.outputs.issue_number }}"
+
+      - name: Update with PR info
+        if: needs.create-pr.outputs.pr_number
+        run: |
+          # TODO: Update record with PR number
+          echo "PR created: ${{ needs.create-pr.outputs.pr_number }}"
+
+      - name: Commit history
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ${{ env.HISTORY_DIR }}
+          git commit -m "Update fix history for issue #${{ needs.analyze.outputs.issue_number }}" || echo "No changes"
+          git push || echo "Nothing to push"
+
+  # =============================================================================
+  # METRICS: Generate and display metrics
+  # =============================================================================
+  metrics:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.issue_number == 'metrics'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Show metrics
+        run: |
+          python scripts/ai/acceptance_tracker.py metrics
+
+      - name: Show learning feedback
+        run: |
+          python scripts/ai/acceptance_tracker.py feedback
+
+      - name: Show recent proposals
+        run: |
+          python scripts/ai/acceptance_tracker.py recent --limit 20
