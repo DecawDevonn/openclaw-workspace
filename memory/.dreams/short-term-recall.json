@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "updatedAt": "2026-04-13T16:05:34.832Z",
+  "entries": {
+    "memory:memory/2026-04-11.md:1:8": {
+      "key": "memory:memory/2026-04-11.md:1:8",
+      "path": "memory/2026-04-11.md",
+      "startLine": 1,
+      "endLine": 8,
+      "source": "memory",
+      "snippet": "- Continued work on `devonn-ai` and added a custom `DESIGN.md` (Fortress Design System), project-local `AGENTS.md`, and `dashboard-demo.html` to ground future UI work in a consistent dark/cyan/violet design language. - Fixed a bad commit that accidentally included `node_modules`; ensured `devonn-ai/.gitignore` contains `node_modules/` and `dist/`. - Integrated Bytez into Devonn.ai as a real LLM provider path via `src/providers/llm.ts`, replacing the intelligence agent's canned mock responses with provider-backed calls. - Added provider-aware config in `devonn-ai/src/utils/config.ts` with support for `LLM_PROVIDER=bytez|openclaw`, `BYTEZ_KEY`, `BYTEZ_API_URL`, `BYTEZ_MODEL`, optional `BYTEZ_P",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 9.99999000001e-7,
+      "maxScore": 9.99999000001e-7,
+      "firstRecalledAt": "2026-04-13T16:05:34.832Z",
+      "lastRecalledAt": "2026-04-13T16:05:34.832Z",
+      "queryHashes": [
+        "358881a8732c"
+      ],
+      "recallDays": [
+        "2026-04-13"
+      ],
+      "conceptTags": [
+        "devonn-ai",
+        "design.md",
+        "project-local",
+        "agents.md",
+        "dashboard-demo.html",
+        "dark/cyan/violet",
+        "node-modules",
+        "devonn.ai"
+      ]
+    }
+  }
+}

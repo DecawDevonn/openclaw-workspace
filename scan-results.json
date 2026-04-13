@@ -1,0 +1,106 @@
+{
+  "scanned_at": "2026-04-10T17:03:49.879Z",
+  "repo": "microsoft/vscode",
+  "total_issues": 23,
+  "candidates": [
+    {
+      "number": 309053,
+      "title": "Claude dont work",
+      "url": "https://github.com/microsoft/vscode/issues/309053",
+      "score": 65,
+      "complexity": "MEDIUM",
+      "reasons": [
+        "Recently updated",
+        "Clear title"
+      ]
+    },
+    {
+      "number": 309049,
+      "title": "Ask-to-Workflow Handoff (not only Ask-to-Agent)",
+      "url": "https://github.com/microsoft/vscode/issues/309049",
+      "score": 65,
+      "complexity": "MEDIUM",
+      "reasons": [
+        "Recently updated",
+        "Clear title"
+      ]
+    },
+    {
+      "number": 309048,
+      "title": "Raptor Mini doesnt respect explicit instructions",
+      "url": "https://github.com/microsoft/vscode/issues/309048",
+      "score": 65,
+      "complexity": "MEDIUM",
+      "reasons": [
+        "Recently updated",
+        "Clear title"
+      ]
+    },
+    {
+      "number": 309033,
+      "title": "Freeze/crash during agent mode",
+      "url": "https://github.com/microsoft/vscode/issues/309033",
+      "score": 65,
+      "complexity": "MEDIUM",
+      "reasons": [
+        "Recently updated",
+        "Clear title"
+      ]
+    },
+    {
+      "number": 309027,
+      "title": "Create new session from current worktree",
+      "url": "https://github.com/microsoft/vscode/issues/309027",
+      "score": 65,
+      "complexity": "MEDIUM",
+      "reasons": [
+        "Recently updated",
+        "Clear title"
+      ]
+    },
+    {
+      "number": 309026,
+      "title": "many timetout",
+      "url": "https://github.com/microsoft/vscode/issues/309026",
+      "score": 65,
+      "complexity": "MEDIUM",
+      "reasons": [
+        "Recently updated",
+        "Clear title"
+      ]
+    },
+    {
+      "number": 309025,
+      "title": "Stage / Unstage changes",
+      "url": "https://github.com/microsoft/vscode/issues/309025",
+      "score": 65,
+      "complexity": "MEDIUM",
+      "reasons": [
+        "Recently updated",
+        "Clear title"
+      ]
+    },
+    {
+      "number": 309024,
+      "title": "Fork sessions",
+      "url": "https://github.com/microsoft/vscode/issues/309024",
+      "score": 65,
+      "complexity": "MEDIUM",
+      "reasons": [
+        "Recently updated",
+        "Clear title"
+      ]
+    },
+    {
+      "number": 309022,
+      "title": "Discord ShareScreen || New Window Copilot",
+      "url": "https://github.com/microsoft/vscode/issues/309022",
+      "score": 65,
+      "complexity": "MEDIUM",
+      "reasons": [
+        "Recently updated",
+        "Clear title"
+      ]
+    }
+  ]
+}

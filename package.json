@@ -1,0 +1,27 @@
+{
+  "name": "devonn-autonomous-scheduler",
+  "version": "2.0.0",
+  "description": "Self-managing execution brain for Devonn.ai",
+  "type": "module",
+  "main": "bootstrap.ts",
+  "bin": {
+    "devonn": "./cli/devonn.ts"
+  },
+  "scripts": {
+    "start": "tsx bootstrap.ts",
+    "dev": "tsx watch bootstrap.ts",
+    "build": "tsc",
+    "cli": "tsx cli/devonn.ts",
+    "test": "echo \"Tests not implemented yet\" && exit 1"
+  },
+  "dependencies": {
+    "@types/node": "^20.0.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "created_at": "2026-04-10T17:04:45.218Z",
+  "issue": {
+    "number": 309025,
+    "title": "Stage / Unstage changes",
+    "url": "https://github.com/microsoft/vscode/issues/309025",
+    "state": "open",
+    "labels": []
+  },
+  "plan": {
+    "type": "general",
+    "complexity": "MEDIUM",
+    "approach": [
+      "1. Understand issue context",
+      "2. Research relevant code",
+      "3. Propose solution approach",
+      "4. Implement changes",
+      "5. Test and validate"
+    ],
+    "estimatedFiles": "1-5 files",
+    "risks": [
+      "No test label - may need test coverage"
+    ],
+    "timeEstimate": "2-4 hours",
+    "needsTests": true,
+    "needsDocs": false
+  }
+}

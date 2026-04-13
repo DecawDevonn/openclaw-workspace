@@ -1,0 +1,262 @@
+name: Autonomous Fix Engine
+
+on:
+  issues:
+    types: [opened, edited]
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 'Issue number to analyze'
+        required: true
+        type: string
+
+jobs:
+  analyze-and-propose-fix:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.issue.labels.*.name, 'auto-fix') || contains(github.event.issue.body, '@fix-engine')
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Debug repo structure
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "---- Root contents ----"
+          ls -la
+          echo "---- scripts directory ----"
+          ls -la scripts/ || echo "No scripts directory"
+          echo "---- scripts/ai directory ----"
+          ls -la scripts/ai/ || echo "No scripts/ai directory"
+          echo "---- find propose_fixes.py ----"
+          find . -name "propose_fixes.py" 2>/dev/null || echo "File not found anywhere"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openai requests
+          if [ -f scripts/ai/requirements.txt ]; then
+            pip install -r scripts/ai/requirements.txt
+          fi
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+
+      - name: Verify script exists
+        id: verify_script
+        run: |
+          SCRIPT_PATH="scripts/ai/propose_fixes.py"
+          if [ ! -f "$SCRIPT_PATH" ]; then
+            echo "::error::Script not found at $SCRIPT_PATH"
+            echo "Searching for file..."
+            find . -name "propose_fixes.py" 2>/dev/null || true
+            exit 1
+          fi
+          echo "Script found at: $SCRIPT_PATH"
+          echo "path=$SCRIPT_PATH" >> $GITHUB_OUTPUT
+          
+          # Make executable
+          chmod +x "$SCRIPT_PATH"
+
+      - name: Get issue data
+        id: issue
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            ISSUE_NUMBER="${{ github.event.inputs.issue_number }}"
+          else
+            ISSUE_NUMBER="${{ github.event.issue.number }}"
+          fi
+          
+          echo "number=$ISSUE_NUMBER" >> $GITHUB_OUTPUT
+          
+          # Fetch issue body via API if not available in event
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER" | \
+              jq -r '.body' > issue_body.txt
+            echo "body_file=issue_body.txt" >> $GITHUB_OUTPUT
+          else
+            echo "body=${{ github.event.issue.body }}" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
+
+      - name: Run AI Fix Proposal
+        id: fix_proposal
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ISSUE_NUMBER: ${{ steps.issue.outputs.number }}
+        run: |
+          # Verify script exists
+          SCRIPT_PATH="scripts/ai/propose_fixes.py"
+          if [ ! -f "$SCRIPT_PATH" ]; then
+            echo "ERROR: Script not found at $SCRIPT_PATH"
+            echo "Searching for alternative locations..."
+            find . -name "propose_fixes.py" 2>/dev/null
+            exit 1
+          fi
+          
+          # Make script executable
+          chmod +x "$SCRIPT_PATH"
+          
+          # Run the script
+          if [ -f "${{ steps.issue.outputs.body_file }}" ]; then
+            ISSUE_BODY=$(cat "${{ steps.issue.outputs.body_file }}")
+          else
+            ISSUE_BODY="${{ steps.issue.outputs.body }}"
+          fi
+          
+          python "$SCRIPT_PATH" \
+            --issue-number "$ISSUE_NUMBER" \
+            --issue-body "$ISSUE_BODY"
+        shell: bash
+
+      - name: Comment on issue with fix proposal
+        if: steps.fix_proposal.outputs.has_proposal == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const proposal = decodeURIComponent('${{ steps.fix_proposal.outputs.fix_proposal }}'.replace(/%0A/g, '\n').replace(/%0D/g, '\r').replace(/%25/g, '%'));
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 🤖 Auto-Fix Proposal\n\n${proposal}\n\n---\n*This was automatically generated by the Autonomous Fix Engine. Please review before applying.*`
+            });
+
+      - name: Handle failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number || '${{ github.event.inputs.issue_number }}',
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## ❌ Auto-Fix Engine Failed\n\nThe autonomous fix engine encountered an error. Check the [workflow logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.`
+            });
+
+  # Optional: Create a PR with the fix if user approves
+  create-fix-pr:
+    runs-on: ubuntu-latest
+    needs: analyze-and-propose-fix
+    if: github.event.comment.body == '/apply-fix' && needs.analyze-and-propose-fix.outputs.has_proposal == 'true'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Apply fix
+        id: apply_fix
+        run: |
+          # This would parse the fix proposal and apply changes
+          # Implementation depends on the fix format
+          echo "Applying fix..."
+      
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "🤖 Auto-fix: ${{ needs.analyze-and-propose-fix.outputs.issue_title }}"
+          title: "🤖 Auto-fix: Issue #${{ needs.analyze-and-propose-fix.outputs.issue_number }}"
+          body: |
+            This PR was automatically generated by the Autonomous Fix Engine.
+            
+            **Original Issue:** #${{ needs.analyze-and-propose-fix.outputs.issue_number }}
+            
+            **Changes:**
+            - [Describe the fix here]
+            
+            Please review before merging.
+          branch: auto-fix/issue-${{ needs.analyze-and-propose-fix.outputs.issue_number }}
+          delete-branch: true
+          draft: true
+    
+      - name: Comment on issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: ${{ needs.analyze-and-propose-fix.outputs.issue_number }},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## ✅ Fix Applied\n\nI've created a pull request with the proposed fix: #${{ steps.create-pr.outputs.pull-request-number }}\n\nPlease review and merge if it looks correct.`
+            });
+
+  # Add label to trigger auto-fix
+  label-trigger:
+    runs-on: ubuntu-latest
+    if: github.event.label.name == 'auto-fix'
+    steps:
+      - name: Trigger comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "🤖 **Auto-Fix Engine triggered!**\n\nAnalyzing issue and generating fix proposal..."
+            });
+            
+            // Trigger the workflow_dispatch event
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'autonomous-fix.yml',
+              ref: context.payload.issue.head?.ref || 'main',
+              inputs: {
+                issue_number: String(context.issue.number)
+              }
+            });
+
+  # Schedule periodic runs
+  schedule-trigger:
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 */6 * * *'
+    steps:
+      - name: Scan for issues needing fixes
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Find open issues with specific labels
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'needs-fix,auto-fix',
+              per_page: 10
+            });
+            
+            for (const issue of issues) {
+              console.log(`Triggering auto-fix for issue #${issue.number}: ${issue.title}`);
+              
+              await github.rest.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'autonomous-fix.yml',
+                ref: context.ref,
+                inputs: {
+                  issue_number: String(issue.number)
+                }
+              });
+            }
