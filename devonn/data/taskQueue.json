@@ -1,162 +1,38 @@
 {
-  "queues": {
-    "critical": [],
-    "high": [
+  "tasks": [
+    [
+      "task_1777160458115_1",
       {
-        "id": "task_1776187787924_r6xh4q50x",
-        "type": "system_check",
-        "priority": 8,
+        "id": "task_1777160458115_1",
+        "type": "shell_command",
+        "subtype": "exec",
+        "priority": 9,
         "status": "completed",
         "retries": 0,
         "maxRetries": 3,
         "retryDelay": 5000,
+        "attempts": 1,
         "dependencies": [],
         "payload": {
-          "action": "health_check",
-          "recurring": true,
-          "interval": 60000
+          "command": "echo \"Hello from Devonn Scheduler\" && date -u",
+          "description": "Integration test task"
         },
-        "timeout": 300000,
-        "createdAt": 1776187787924,
-        "startedAt": 1776187789927,
-        "completedAt": 1776187789929,
+        "metadata": {
+          "createdAt": "2026-04-25T23:40:58.115Z",
+          "scheduledAt": null,
+          "tags": []
+        },
+        "lastRun": "2026-04-25T23:40:59.116Z",
+        "duration": 11,
         "result": {
-          "action": "health_check",
-          "status": "healthy",
-          "timestamp": 1776187789928,
-          "metrics": {}
-        },
-        "duration": 2
-      },
-      {
-        "id": "task_1776188013896_tsanki56j",
-        "type": "system_check",
-        "priority": 8,
-        "status": "completed",
-        "retries": 0,
-        "maxRetries": 3,
-        "retryDelay": 5000,
-        "dependencies": [],
-        "payload": {
-          "action": "health_check",
-          "recurring": true,
-          "interval": 60000
-        },
-        "timeout": 300000,
-        "createdAt": 1776188013896,
-        "startedAt": 1776188015899,
-        "completedAt": 1776188015900,
-        "result": {
-          "action": "health_check",
-          "status": "healthy",
-          "timestamp": 1776188015900,
-          "metrics": {}
-        },
-        "duration": 1
-      },
-      {
-        "id": "task_1776511721476_o7mghbfvu",
-        "type": "system_check",
-        "priority": 8,
-        "status": "completed",
-        "retries": 0,
-        "maxRetries": 3,
-        "retryDelay": 5000,
-        "dependencies": [],
-        "payload": {
-          "action": "health_check",
-          "recurring": true,
-          "interval": 60000
-        },
-        "timeout": 300000,
-        "createdAt": 1776511721476,
-        "startedAt": 1776511723477,
-        "completedAt": 1776511723478,
-        "result": {
-          "action": "health_check",
-          "status": "healthy",
-          "timestamp": 1776511723478,
-          "metrics": {}
-        },
-        "duration": 1
+          "success": true,
+          "stdout": "Hello from Devonn Scheduler\nSat Apr 25 23:40:59 UTC 2026",
+          "stderr": "",
+          "command": "echo \"Hello from Devonn Scheduler\" && date -u"
+        }
       }
-    ],
-    "normal": [
-      {
-        "id": "task_1776187787925_wz2wfwllm",
-        "type": "metrics_collection",
-        "priority": 6,
-        "status": "failed",
-        "retries": 0,
-        "maxRetries": 3,
-        "retryDelay": 5000,
-        "dependencies": [],
-        "payload": {
-          "action": "metrics",
-          "recurring": true,
-          "interval": 300000
-        },
-        "timeout": 300000,
-        "createdAt": 1776187787925,
-        "startedAt": 1776187789928,
-        "error": "Unknown terminal action: metrics",
-        "failedAt": 1776187789928,
-        "duration": 0,
-        "nextRetryAt": 1776187795390.5815
-      },
-      {
-        "id": "task_1776188013897_1r1r3pxis",
-        "type": "metrics_collection",
-        "priority": 5,
-        "status": "completed",
-        "retries": 0,
-        "maxRetries": 3,
-        "retryDelay": 5000,
-        "dependencies": [],
-        "payload": {
-          "action": "metrics",
-          "recurring": true,
-          "interval": 300000
-        },
-        "timeout": 300000,
-        "createdAt": 1776188013897,
-        "startedAt": 1776188015900,
-        "completedAt": 1776188015900,
-        "result": {
-          "action": "metrics",
-          "metrics": {},
-          "timestamp": 1776188015900
-        },
-        "duration": 0
-      },
-      {
-        "id": "task_1776511721476_ziuy7ue7u",
-        "type": "metrics_collection",
-        "priority": 5,
-        "status": "completed",
-        "retries": 0,
-        "maxRetries": 3,
-        "retryDelay": 5000,
-        "dependencies": [],
-        "payload": {
-          "action": "metrics",
-          "recurring": true,
-          "interval": 300000
-        },
-        "timeout": 300000,
-        "createdAt": 1776511721476,
-        "startedAt": 1776511723478,
-        "completedAt": 1776511723479,
-        "result": {
-          "action": "metrics",
-          "metrics": {},
-          "timestamp": 1776511723478
-        },
-        "duration": 1
-      }
-    ],
-    "low": [],
-    "background": []
-  },
-  "timestamp": 1776511725479
+    ]
+  ],
+  "nextId": 2,
+  "persistedAt": "2026-04-25T23:40:59.128Z"
 }

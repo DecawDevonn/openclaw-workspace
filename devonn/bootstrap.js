@@ -8,6 +8,7 @@
 
 import { SchedulerBrain } from './core/schedulerBrain.js';
 import { HealthGovernor } from './core/healthGovernor.js';
+import { EcosystemConnector } from './ecosystem-connector.js';
 
 // Configuration
 const CONFIG = {
@@ -19,6 +20,7 @@ const CONFIG = {
 
 // Global state
 let scheduler = null;
+let ecosystemConnector = null;
 let isShuttingDown = false;
 
 /**
@@ -60,6 +62,14 @@ async function bootstrap() {
     // Schedule some initial system tasks
     // Note: Using scheduler.addTask API
     await scheduleInitialTasks(scheduler);
+    
+    // Connect to Devonn Ecosystem if enabled
+    if (process.env.ENABLE_ECOSYSTEM === 'true') {
+      console.log('[Bootstrap] Connecting to Devonn Ecosystem...');
+      ecosystemConnector = new EcosystemConnector(scheduler);
+      await ecosystemConnector.start();
+      console.log('[Bootstrap] Ecosystem connected');
+    }
     
     console.log('[Bootstrap] System fully operational');
     
@@ -108,6 +118,9 @@ async function shutdown(signal) {
   console.log();
   console.log(`[Bootstrap] Received ${signal}. Shutting down gracefully...`);
   
+  if (ecosystemConnector) {
+    ecosystemConnector.stop();
+  }
   if (scheduler) {
     scheduler.stop();
   }
