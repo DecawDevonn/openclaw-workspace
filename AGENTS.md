@@ -393,6 +393,49 @@ class TerminalAgent {
 
 ---
 
+## 🔄 Scheduler Integration
+
+Agents are now orchestrated by the DEVONN.ai Autonomous Scheduler OS:
+
+### Task Routing
+
+```javascript
+// Scheduler Brain determines agent type
+determineAgentType(task) {
+  const typeMap = {
+    'web_scrape': 'web',
+    'shell_command': 'terminal',
+    'system_check': 'system',
+    'llm_analysis': 'intelligence',
+    'workflow': 'orchestrator'
+  };
+  return typeMap[task.type] || 'terminal';
+}
+```
+
+### Priority-Based Execution
+
+| Agent Type | Default Priority | Queue |
+|------------|------------------|-------|
+| System Agent | 8 | critical/high |
+| Web Agent | 6-7 | high/normal |
+| Terminal Agent | 5-6 | normal |
+| Intelligence Agent | 4-7 | normal/high |
+| Orchestrator Agent | 7-9 | high/critical |
+
+### Execution Flow
+
+1. Task submitted to Scheduler Brain
+2. Priority determines queue (critical → background)
+3. Health Governor checks system state
+4. Dependencies verified
+5. Task routed to appropriate agent
+6. Agent executes via tool calls
+7. Results logged, insights updated
+8. On failure: Self-Healing Engine retries
+
+---
+
 ## 🔗 Related Documents
 
 - `JOB.md` — What agents execute
@@ -400,6 +443,7 @@ class TerminalAgent {
 - `USER.md` — Who agents serve
 - `IDENTITY.md` — How agents should behave
 - `REFLECTION.md` — How agents improve
+- `devonn/SCHEDULER.md` — Autonomous scheduler architecture
 
 ---
 

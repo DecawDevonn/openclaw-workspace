@@ -1,0 +1,22 @@
+[Unit]
+Description=DEVONN.ai Autonomous Scheduler OS
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/.openclaw/workspace/devonn
+Environment=NODE_ENV=production
+Environment=DEVONN_TICK_INTERVAL=2000
+Environment=DEVONN_MAX_CONCURRENT=5
+Environment=DEVONN_DEFAULT_TIMEOUT=300000
+Environment=DEVONN_DATA_PATH=./data
+ExecStart=/usr/bin/node bootstrap.js
+Restart=always
+RestartSec=10
+StandardOutput=append:/home/ubuntu/.openclaw/workspace/devonn/data/scheduler.log
+StandardError=append:/home/ubuntu/.openclaw/workspace/devonn/data/scheduler.log
+
+[Install]
+WantedBy=multi-user.target

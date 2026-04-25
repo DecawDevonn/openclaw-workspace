@@ -1,0 +1,20 @@
+[Unit]
+Description=DEVONN.ai Scheduler API Server
+After=network.target devonn-scheduler.service
+Wants=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/.openclaw/workspace/devonn
+Environment=NODE_ENV=production
+Environment=DEVONN_API_PORT=3456
+Environment=DEVONN_API_HOST=127.0.0.1
+ExecStart=/usr/bin/node api-server.js
+Restart=always
+RestartSec=10
+StandardOutput=append:/home/ubuntu/.openclaw/workspace/devonn/data/api.log
+StandardError=append:/home/ubuntu/.openclaw/workspace/devonn/data/api.log
+
+[Install]
+WantedBy=multi-user.target

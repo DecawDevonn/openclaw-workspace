@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-04-13T16:05:34.832Z",
+  "updatedAt": "2026-04-21T06:34:54.509Z",
   "entries": {
     "memory:memory/2026-04-11.md:1:8": {
       "key": "memory:memory/2026-04-11.md:1:8",
@@ -9,18 +9,38 @@
       "endLine": 8,
       "source": "memory",
       "snippet": "- Continued work on `devonn-ai` and added a custom `DESIGN.md` (Fortress Design System), project-local `AGENTS.md`, and `dashboard-demo.html` to ground future UI work in a consistent dark/cyan/violet design language. - Fixed a bad commit that accidentally included `node_modules`; ensured `devonn-ai/.gitignore` contains `node_modules/` and `dist/`. - Integrated Bytez into Devonn.ai as a real LLM provider path via `src/providers/llm.ts`, replacing the intelligence agent's canned mock responses with provider-backed calls. - Added provider-aware config in `devonn-ai/src/utils/config.ts` with support for `LLM_PROVIDER=bytez|openclaw`, `BYTEZ_KEY`, `BYTEZ_API_URL`, `BYTEZ_MODEL`, optional `BYTEZ_P",
-      "recallCount": 1,
+      "recallCount": 19,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 9.99999000001e-7,
-      "maxScore": 9.99999000001e-7,
+      "totalScore": 6.317883642816892,
+      "maxScore": 0.6317875476156866,
       "firstRecalledAt": "2026-04-13T16:05:34.832Z",
-      "lastRecalledAt": "2026-04-13T16:05:34.832Z",
+      "lastRecalledAt": "2026-04-21T06:34:54.509Z",
       "queryHashes": [
-        "358881a8732c"
+        "358881a8732c",
+        "f45b2b684e2a",
+        "5dd17e7a94c7",
+        "6fe18e3d9ef3",
+        "7d60f9319406",
+        "933611bf5b70",
+        "5381f63983a7",
+        "a9383be4097e",
+        "b75570162bad",
+        "90fc4c711cc1",
+        "ce8b5c8db8dd",
+        "05b2118ecd9d",
+        "ad40461dc059",
+        "2f42e7e9f1e2",
+        "9b30e344347a",
+        "52ce243e181d"
       ],
       "recallDays": [
-        "2026-04-13"
+        "2026-04-13",
+        "2026-04-14",
+        "2026-04-18",
+        "2026-04-19",
+        "2026-04-20",
+        "2026-04-21"
       ],
       "conceptTags": [
         "devonn-ai",

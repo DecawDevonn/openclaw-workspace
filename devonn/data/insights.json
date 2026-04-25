@@ -1,0 +1,57 @@
+{
+  "metrics": {
+    "tasksByType": [
+      [
+        "system_check",
+        {
+          "count": 1,
+          "successes": 1,
+          "failures": 0,
+          "totalDuration": 4,
+          "avgDuration": 4
+        }
+      ],
+      [
+        "metrics_collection",
+        {
+          "count": 1,
+          "successes": 1,
+          "failures": 0,
+          "totalDuration": 1,
+          "avgDuration": 1
+        }
+      ]
+    ],
+    "agentPerformance": [],
+    "hourlyStats": [
+      [
+        22,
+        {
+          "count": 2,
+          "successes": 2,
+          "failures": 0
+        }
+      ]
+    ],
+    "failurePatterns": []
+  },
+  "executionHistory": [
+    {
+      "taskId": "task_1777157940978_1",
+      "type": "system_check",
+      "duration": 4,
+      "priority": 8,
+      "timestamp": 1777157942984,
+      "success": true
+    },
+    {
+      "taskId": "task_1777157940978_2",
+      "type": "metrics_collection",
+      "duration": 1,
+      "priority": 5,
+      "timestamp": 1777157942985,
+      "success": true
+    }
+  ],
+  "timestamp": 1777157979012
+}

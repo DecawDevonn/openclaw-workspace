@@ -1,0 +1,28 @@
+{
+  "Changes": [
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "devonn.ai",
+        "Type": "A",
+        "AliasTarget": {
+          "HostedZoneId": "REPLACE_ALB_HOSTED_ZONE_ID",
+          "DNSName": "REPLACE_ALB_DNS_NAME",
+          "EvaluateTargetHealth": true
+        }
+      }
+    },
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "www.devonn.ai",
+        "Type": "A",
+        "AliasTarget": {
+          "HostedZoneId": "REPLACE_ALB_HOSTED_ZONE_ID",
+          "DNSName": "REPLACE_ALB_DNS_NAME",
+          "EvaluateTargetHealth": true
+        }
+      }
+    }
+  ]
+}

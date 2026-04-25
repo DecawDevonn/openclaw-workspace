@@ -1,0 +1,17 @@
+: "node",
+  "version": "2.0.0",
+  "description": "MyClaw Autonomous Scheduler OS - Self-managing execution brain",
+  "main": "bootstrap.js",
+  "type": "module",
+  "scripts": {
+    "start": "node bootstrap.js",
+    "dev": "node --watch bootstrap.js",
+    "test": "node --test tests/**/*.test.js"
+  },
+  "dependencies": {
+    "ioredis": "^5.3.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

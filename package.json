@@ -1,26 +1,24 @@
 {
-  "name": "devonn-autonomous-scheduler",
+  "name": "myclaw-autonomous-scheduler",
   "version": "2.0.0",
-  "description": "Self-managing execution brain for Devonn.ai",
+  "description": "Self-managing execution brain that schedules, prioritizes, retries, heals, and learns",
   "type": "module",
-  "main": "bootstrap.ts",
-  "bin": {
-    "devonn": "./cli/devonn.ts"
-  },
+  "main": "bootstrap.js",
   "scripts": {
-    "start": "tsx bootstrap.ts",
-    "dev": "tsx watch bootstrap.ts",
-    "build": "tsc",
-    "cli": "tsx cli/devonn.ts",
-    "test": "echo \"Tests not implemented yet\" && exit 1"
+    "start": "node bootstrap.js",
+    "dev": "node --inspect bootstrap.js",
+    "test": "node --test",
+    "status": "node -e \"import('./core/eventLoop.js').then(m => console.log(m.getStatus()))\""
   },
-  "dependencies": {
-    "@types/node": "^20.0.0"
-  },
-  "devDependencies": {
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
-  },
+  "keywords": [
+    "scheduler",
+    "autonomous",
+    "orchestration",
+    "self-healing",
+    "task-queue"
+  ],
+  "author": "Devonn.ai",
+  "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
   }

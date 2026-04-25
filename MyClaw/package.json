@@ -1,0 +1,30 @@
+{
+  "name": "myclaw-scheduler-os",
+  "version": "2.0.0",
+  "description": "Autonomous Self-Managing Execution Brain for Devonn.ai",
+  "main": "bootstrap.js",
+  "type": "module",
+  "scripts": {
+    "start": "node bootstrap.js",
+    "dev": "node --inspect bootstrap.js",
+    "test": "node --test",
+    "queue:stats": "node -e \"import('./queue/taskQueue.js').then(m => m.getTaskQueue().then(q => q.getStats()).then(console.log))\"",
+    "dlq:inspect": "node -e \"import('./queue/deadLetterQueue.js').then(m => m.getDeadLetterQueue().then(q => q.getStats()).then(console.log))\"",
+    "insights": "node -e \"import('./analytics/schedulerInsights.js').then(m => m.getSchedulerInsights().then(i => { console.log(i.getSummary()); console.log(i.getRecommendations()); }))\""
+  },
+  "keywords": [
+    "scheduler",
+    "autonomous",
+    "agent",
+    "orchestration",
+    "queue",
+    "self-healing"
+  ],
+  "author": "Wesley Little",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

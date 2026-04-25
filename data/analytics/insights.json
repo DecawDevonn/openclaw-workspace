@@ -1,0 +1,300 @@
+{
+  "insights": [
+    {
+      "id": "insight_1776176432399_zwqztil9k",
+      "type": "health_governor_started",
+      "data": {},
+      "timestamp": 1776176432399,
+      "hour": 14,
+      "day": 2
+    },
+    {
+      "id": "insight_1776176432399_dbgzoe1gz",
+      "type": "event_loop_started",
+      "data": {
+        "interval": 2000,
+        "concurrentLimit": 5
+      },
+      "timestamp": 1776176432399,
+      "hour": 14,
+      "day": 2
+    },
+    {
+      "id": "insight_1776176432399_xpj94aw32",
+      "type": "system_started",
+      "data": {
+        "config": {
+          "healthCheckInterval": 5000,
+          "eventLoopInterval": 2000,
+          "maxConcurrent": 5,
+          "persistInterval": 60000,
+          "debug": false
+        },
+        "timestamp": 1776176432397
+      },
+      "timestamp": 1776176432399,
+      "hour": 14,
+      "day": 2
+    },
+    {
+      "id": "insight_1776176492367_fdx821vso",
+      "type": "event_loop_stopped",
+      "data": {
+        "totalIterations": 40,
+        "totalTasks": 0,
+        "uptime": 59968
+      },
+      "timestamp": 1776176492367,
+      "hour": 14,
+      "day": 2
+    },
+    {
+      "id": "insight_1776192972993_npo1r0yfb",
+      "type": "health_governor_started",
+      "data": {},
+      "timestamp": 1776192972993,
+      "hour": 18,
+      "day": 2
+    },
+    {
+      "id": "insight_1776192972993_rdc254b94",
+      "type": "event_loop_started",
+      "data": {
+        "interval": 2000,
+        "concurrentLimit": 5
+      },
+      "timestamp": 1776192972993,
+      "hour": 18,
+      "day": 2
+    },
+    {
+      "id": "insight_1776192972994_f9tspcaaa",
+      "type": "system_started",
+      "data": {
+        "config": {
+          "healthCheckInterval": 5000,
+          "eventLoopInterval": 2000,
+          "maxConcurrent": 5,
+          "persistInterval": 60000,
+          "debug": false
+        },
+        "timestamp": 1776192972990
+      },
+      "timestamp": 1776192972994,
+      "hour": 18,
+      "day": 2
+    },
+    {
+      "id": "insight_1776193032963_kse0zo294",
+      "type": "event_loop_stopped",
+      "data": {
+        "totalIterations": 40,
+        "totalTasks": 0,
+        "uptime": 59970
+      },
+      "timestamp": 1776193032964,
+      "hour": 18,
+      "day": 2
+    },
+    {
+      "id": "insight_1776197962333_i529j6642",
+      "type": "health_governor_started",
+      "data": {},
+      "timestamp": 1776197962333,
+      "hour": 20,
+      "day": 2
+    },
+    {
+      "id": "insight_1776197962333_3s0r24c49",
+      "type": "event_loop_started",
+      "data": {
+        "interval": 2000,
+        "concurrentLimit": 5
+      },
+      "timestamp": 1776197962333,
+      "hour": 20,
+      "day": 2
+    },
+    {
+      "id": "insight_1776197962333_1ag9m4snd",
+      "type": "system_started",
+      "data": {
+        "config": {
+          "healthCheckInterval": 5000,
+          "eventLoopInterval": 2000,
+          "maxConcurrent": 5,
+          "persistInterval": 60000,
+          "debug": false
+        },
+        "timestamp": 1776197962331
+      },
+      "timestamp": 1776197962333,
+      "hour": 20,
+      "day": 2
+    },
+    {
+      "id": "insight_1776197970005_e66m1jujz",
+      "type": "event_loop_stopped",
+      "data": {
+        "totalIterations": 6,
+        "totalTasks": 0,
+        "uptime": 7671
+      },
+      "timestamp": 1776197970005,
+      "hour": 20,
+      "day": 2
+    },
+    {
+      "id": "insight_1776201080079_53b5yjcts",
+      "type": "health_governor_started",
+      "data": {},
+      "timestamp": 1776201080079,
+      "hour": 21,
+      "day": 2
+    },
+    {
+      "id": "insight_1776201080079_gs4pwl1lg",
+      "type": "event_loop_started",
+      "data": {
+        "interval": 2000,
+        "concurrentLimit": 5
+      },
+      "timestamp": 1776201080079,
+      "hour": 21,
+      "day": 2
+    },
+    {
+      "id": "insight_1776201080079_ps0foh5ok",
+      "type": "system_started",
+      "data": {
+        "config": {
+          "healthCheckInterval": 5000,
+          "eventLoopInterval": 2000,
+          "maxConcurrent": 5,
+          "persistInterval": 60000,
+          "debug": false
+        },
+        "timestamp": 1776201080077
+      },
+      "timestamp": 1776201080079,
+      "hour": 21,
+      "day": 2
+    },
+    {
+      "id": "insight_1776201090011_czjgjf05z",
+      "type": "event_loop_stopped",
+      "data": {
+        "totalIterations": 7,
+        "totalTasks": 0,
+        "uptime": 9932
+      },
+      "timestamp": 1776201090011,
+      "hour": 21,
+      "day": 2
+    },
+    {
+      "id": "insight_1776204791171_n2ezj5hfi",
+      "type": "health_governor_started",
+      "data": {},
+      "timestamp": 1776204791171,
+      "hour": 22,
+      "day": 2
+    },
+    {
+      "id": "insight_1776204791172_wkjxh8r8x",
+      "type": "event_loop_started",
+      "data": {
+        "interval": 2000,
+        "concurrentLimit": 5
+      },
+      "timestamp": 1776204791172,
+      "hour": 22,
+      "day": 2
+    },
+    {
+      "id": "insight_1776204791172_n6072is4d",
+      "type": "system_started",
+      "data": {
+        "config": {
+          "healthCheckInterval": 5000,
+          "eventLoopInterval": 2000,
+          "maxConcurrent": 5,
+          "persistInterval": 60000,
+          "debug": false
+        },
+        "timestamp": 1776204791167
+      },
+      "timestamp": 1776204791172,
+      "hour": 22,
+      "day": 2
+    },
+    {
+      "id": "insight_1776204821137_p79ik7ti7",
+      "type": "event_loop_stopped",
+      "data": {
+        "totalIterations": 20,
+        "totalTasks": 0,
+        "uptime": 29966
+      },
+      "timestamp": 1776204821137,
+      "hour": 22,
+      "day": 2
+    },
+    {
+      "id": "insight_1776205465136_c42mendkb",
+      "type": "health_governor_started",
+      "data": {},
+      "timestamp": 1776205465136,
+      "hour": 22,
+      "day": 2
+    },
+    {
+      "id": "insight_1776205465136_t3ij0gjp1",
+      "type": "event_loop_started",
+      "data": {
+        "interval": 2000,
+        "concurrentLimit": 5
+      },
+      "timestamp": 1776205465136,
+      "hour": 22,
+      "day": 2
+    },
+    {
+      "id": "insight_1776205465137_nqf35zf90",
+      "type": "system_started",
+      "data": {
+        "config": {
+          "healthCheckInterval": 5000,
+          "eventLoopInterval": 2000,
+          "maxConcurrent": 5,
+          "persistInterval": 60000,
+          "debug": false
+        },
+        "timestamp": 1776205465134
+      },
+      "timestamp": 1776205465137,
+      "hour": 22,
+      "day": 2
+    },
+    {
+      "id": "insight_1776205470011_01piz7uvt",
+      "type": "event_loop_stopped",
+      "data": {
+        "totalIterations": 4,
+        "totalTasks": 0,
+        "uptime": 4875
+      },
+      "timestamp": 1776205470011,
+      "hour": 22,
+      "day": 2
+    }
+  ],
+  "metrics": {
+    "tasksByType": {},
+    "tasksByHour": {},
+    "avgExecutionTime": {},
+    "failureRate": {},
+    "agentPerformance": {}
+  },
+  "lastUpdated": 1776205470012
+}

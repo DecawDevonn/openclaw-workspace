@@ -1,0 +1,30 @@
+{
+  "name": "devonn-scheduler",
+  "version": "2.0.0",
+  "description": "DEVONN.ai Autonomous Scheduler OS - Event-driven task orchestration",
+  "type": "module",
+  "main": "bootstrap.js",
+  "scripts": {
+    "start": "node bootstrap.js",
+    "dev": "node --watch bootstrap.js",
+    "api": "node api-server.js",
+    "status": "node cli.js status",
+    "submit": "node cli.js submit",
+    "queue": "node cli.js queue",
+    "health": "node cli.js health",
+    "test": "node --test test/*.test.js 2>/dev/null || echo 'No tests yet'",
+    "logs": "tail -f data/scheduler.log"
+  },
+  "keywords": [
+    "scheduler",
+    "orchestration",
+    "automation",
+    "ai",
+    "agents"
+  ],
+  "author": "Wesley Little",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

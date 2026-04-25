@@ -1,0 +1,45 @@
+name: Domain Activation
+
+on:
+  workflow_dispatch:
+
+jobs:
+  activate:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::REPLACE_ACCOUNT_ID:role/GitHubActionsDeploymentRole
+          aws-region: us-west-2
+      
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --name REPLACE_CLUSTER_NAME --region us-west-2
+      
+      - name: Install kubectl
+        run: |
+          curl -LO "https://dl.k8s/release/$(curl -L -s https://dl.k8s/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+      
+      - name: Test EKS Connection
+        run: |
+          kubectl get nodes
+      
+      - name: Check DNS Propagation
+        run: |
+          chmod +x scripts/check_dns_flip.sh
+          ./scripts/check_dns_flip.sh
+      
+      - name: Activate Domain
+        run: |
+          chmod +x scripts/domain_activation.sh
+          ./scripts/domain_activation.sh
