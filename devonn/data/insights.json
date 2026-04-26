@@ -7,8 +7,8 @@
           "count": 1,
           "successes": 1,
           "failures": 0,
-          "totalDuration": 2,
-          "avgDuration": 2
+          "totalDuration": 1,
+          "avgDuration": 1
         }
       ],
       [
@@ -25,7 +25,7 @@
     "agentPerformance": [],
     "hourlyStats": [
       [
-        0,
+        1,
         {
           "count": 2,
           "successes": 2,
@@ -37,21 +37,21 @@
   },
   "executionHistory": [
     {
-      "taskId": "task_1777163045792_2",
+      "taskId": "task_1777165422296_2",
       "type": "system_check",
-      "duration": 2,
+      "duration": 1,
       "priority": 8,
-      "timestamp": 1777163047796,
+      "timestamp": 1777165424300,
       "success": true
     },
     {
-      "taskId": "task_1777163045792_3",
+      "taskId": "task_1777165422296_3",
       "type": "metrics_collection",
       "duration": 0,
       "priority": 5,
-      "timestamp": 1777163047796,
+      "timestamp": 1777165424300,
       "success": true
     }
   ],
-  "timestamp": 1777165245573
+  "timestamp": 1777165480339
 }
