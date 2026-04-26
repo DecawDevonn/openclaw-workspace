@@ -9,6 +9,7 @@
 import { SchedulerBrain } from './core/schedulerBrain.js';
 import { HealthGovernor } from './core/healthGovernor.js';
 import { EcosystemConnector } from './ecosystem-connector.js';
+import { DashboardAPI } from './api-server.js';
 
 // Configuration
 const CONFIG = {
@@ -21,6 +22,7 @@ const CONFIG = {
 // Global state
 let scheduler = null;
 let ecosystemConnector = null;
+let dashboardAPI = null;
 let isShuttingDown = false;
 
 /**
@@ -67,9 +69,15 @@ async function bootstrap() {
     if (process.env.ENABLE_ECOSYSTEM === 'true') {
       console.log('[Bootstrap] Connecting to Devonn Ecosystem...');
       ecosystemConnector = new EcosystemConnector(scheduler);
+      global.ecosystemConnector = ecosystemConnector;
       await ecosystemConnector.start();
       console.log('[Bootstrap] Ecosystem connected');
     }
+    
+    // Start Dashboard API
+    console.log('[Bootstrap] Starting Dashboard API...');
+    dashboardAPI = new DashboardAPI(scheduler);
+    dashboardAPI.start();
     
     console.log('[Bootstrap] System fully operational');
     
@@ -118,6 +126,9 @@ async function shutdown(signal) {
   console.log();
   console.log(`[Bootstrap] Received ${signal}. Shutting down gracefully...`);
   
+  if (dashboardAPI) {
+    dashboardAPI.stop();
+  }
   if (ecosystemConnector) {
     ecosystemConnector.stop();
   }
