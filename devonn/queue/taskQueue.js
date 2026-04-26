@@ -222,6 +222,29 @@ class TaskQueue {
   }
 
   /**
+   * Get all tasks
+   */
+  peekAll() {
+    return Array.from(this.tasks.values());
+  }
+
+  /**
+   * Get tasks by status
+   */
+  peekByStatus(status) {
+    return Array.from(this.tasks.values()).filter(t => t.status === status);
+  }
+
+  /**
+   * Get tasks by minimum priority
+   */
+  peekByPriority(minPriority) {
+    return Array.from(this.tasks.values())
+      .filter(t => t.priority >= minPriority)
+      .sort((a, b) => b.priority - a.priority);
+  }
+
+  /**
    * Persist queue to disk
    */
   async persist() {

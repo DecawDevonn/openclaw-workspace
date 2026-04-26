@@ -7,8 +7,8 @@
           "count": 1,
           "successes": 1,
           "failures": 0,
-          "totalDuration": 4,
-          "avgDuration": 4
+          "totalDuration": 2,
+          "avgDuration": 2
         }
       ],
       [
@@ -17,15 +17,15 @@
           "count": 1,
           "successes": 1,
           "failures": 0,
-          "totalDuration": 1,
-          "avgDuration": 1
+          "totalDuration": 0,
+          "avgDuration": 0
         }
       ]
     ],
     "agentPerformance": [],
     "hourlyStats": [
       [
-        22,
+        0,
         {
           "count": 2,
           "successes": 2,
@@ -37,21 +37,21 @@
   },
   "executionHistory": [
     {
-      "taskId": "task_1777157940978_1",
+      "taskId": "task_1777163045792_2",
       "type": "system_check",
-      "duration": 4,
+      "duration": 2,
       "priority": 8,
-      "timestamp": 1777157942984,
+      "timestamp": 1777163047796,
       "success": true
     },
     {
-      "taskId": "task_1777157940978_2",
+      "taskId": "task_1777163045792_3",
       "type": "metrics_collection",
-      "duration": 1,
+      "duration": 0,
       "priority": 5,
-      "timestamp": 1777157942985,
+      "timestamp": 1777163047796,
       "success": true
     }
   ],
-  "timestamp": 1777161622005
+  "timestamp": 1777163063806
 }

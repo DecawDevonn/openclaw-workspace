@@ -201,6 +201,14 @@ class SchedulerBrain extends EventEmitter {
         return await this.runIntelligenceAgent(task);
       case 'orchestrator':
         return await this.runOrchestratorAgent(task);
+      case 'github':
+        return await this.runGitHubAgent(task);
+      case 'deployment':
+        return await this.runDeploymentAgent(task);
+      case 'security':
+        return await this.runSecurityAgent(task);
+      case 'repair':
+        return await this.runRepairAgent(task);
       default:
         throw new Error(`Unknown agent type: ${agentType}`);
     }
@@ -217,6 +225,11 @@ class SchedulerBrain extends EventEmitter {
       'shell_command': 'terminal',
       'git_operation': 'terminal',
       'deploy': 'terminal',
+      'github_monitor': 'github',
+      'deployment_check': 'deployment',
+      'security_scan': 'security',
+      'build_failure_repair': 'repair',
+      'repo_health_check': 'github',
       'system_check': 'system',
       'health_monitor': 'system',
       'cleanup': 'system',
@@ -278,6 +291,26 @@ class SchedulerBrain extends EventEmitter {
     }
     
     return { subtaskResults: results };
+  }
+
+  async runGitHubAgent(task) {
+    const { executeGitHubMonitor } = await import('../agents/githubMonitor.js');
+    return await executeGitHubMonitor(task.payload);
+  }
+
+  async runDeploymentAgent(task) {
+    const { executeDeploymentCheck } = await import('../agents/deploymentChecker.js');
+    return await executeDeploymentCheck(task.payload);
+  }
+
+  async runSecurityAgent(task) {
+    const { executeSecurityScan } = await import('../agents/securityRouter.js');
+    return await executeSecurityScan(task.payload);
+  }
+
+  async runRepairAgent(task) {
+    const { executeRepairRouter } = await import('../agents/repairRouter.js');
+    return await executeRepairRouter(task.payload);
   }
 
   /**
