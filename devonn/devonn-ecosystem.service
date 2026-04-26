@@ -1,25 +1,25 @@
 [Unit]
-Description=DEVONN.ai Autonomous Scheduler
+Description=DEVONN.ai Ecosystem Connector
 Documentation=https://github.com/DecawDevonn/openclaw-workspace
-After=network.target
+After=network.target devonn-scheduler.service
+Requires=devonn-scheduler.service
 
 [Service]
 Type=simple
 User=ubuntu
 WorkingDirectory=/home/ubuntu/.openclaw/workspace/devonn
 EnvironmentFile=/home/ubuntu/.openclaw/workspace/.env
-ExecStart=/usr/bin/node bootstrap.js
+ExecStart=/usr/bin/node ecosystem-standalone.js
 Restart=always
-RestartSec=5
+RestartSec=10
 StandardOutput=journal
 StandardError=journal
-SyslogIdentifier=devonn-scheduler
+SyslogIdentifier=devonn-ecosystem
 
 # Security hardening
 NoNewPrivileges=true
 ProtectSystem=strict
 ProtectHome=false
-ReadWritePaths=/home/ubuntu/.openclaw/workspace/devonn/data
 
 [Install]
 WantedBy=multi-user.target
