@@ -1,16 +1,24 @@
 [Unit]
 Description=DEVONN.ai Autonomous Scheduler
 Documentation=https://github.com/DecawDevonn/openclaw-workspace
-After=network.target
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
 User=ubuntu
+Group=ubuntu
 WorkingDirectory=/home/ubuntu/.openclaw/workspace/devonn
 EnvironmentFile=/home/ubuntu/.openclaw/workspace/.env
 ExecStart=/usr/bin/node bootstrap.js
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+KillSignal=SIGTERM
+TimeoutStopSec=30
 Restart=always
 RestartSec=5
+StartLimitInterval=60s
+StartLimitBurst=3
 StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=devonn-scheduler
@@ -20,6 +28,12 @@ NoNewPrivileges=true
 ProtectSystem=strict
 ProtectHome=false
 ReadWritePaths=/home/ubuntu/.openclaw/workspace/devonn/data
+ReadWritePaths=/home/ubuntu/.openclaw/workspace/devonn/logs
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictRealtime=true
+RestrictNamespaces=true
 
 [Install]
 WantedBy=multi-user.target
